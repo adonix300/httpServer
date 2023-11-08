@@ -51,7 +51,7 @@ public class Server {
                 if (separator != -1) {
                     headers.put(line.substring(0, separator), line.substring(separator + 1).trim());
                 }
-                System.out.println(line);
+                //System.out.println(line); // headers
             }
 
             // If it's a POST request, read the body
@@ -60,9 +60,13 @@ public class Server {
                 bodyBuilder.append((char) in.read());
             }
             String body = bodyBuilder.toString();
-            System.out.println(body);
+            //System.out.println(body);
 
             final var request = new Request(requestLine, headers, body);
+            if (request.getMethod().equals("POST") && request.getHeaders().get("Content-Type").equals("x-www-form-urlencoded")) {
+                System.out.println(request.getPostParams());
+            }
+
             final var handler = handlers.get(request.getMethod() + " " + request.getPath());
 
             if (handler == null) {

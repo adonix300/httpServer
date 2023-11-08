@@ -4,6 +4,7 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Map;
 
 import static org.example.HttpHelper.*;
 
@@ -11,17 +12,15 @@ public class Main {
     public static void main(String[] args) {
         Server server = new Server();
 
-
         server.addHandler("POST", "/urlik", (request, responseStream) -> {
             System.out.println("Нам пришел ПОСТ запрос");
-            System.out.println(request.getBody());
             return200(responseStream);
         });
 
         server.addHandler("GET", "/file", new Handler() {
             @Override
             public void handle(Request request, BufferedOutputStream responseStream) throws IOException {
-                handleReturnFileRequest(request, responseStream, request.getQueryParams().get("fileName"));
+                handleReturnFileRequest(request, responseStream, request.getQueryParam("fileName"));
             }
         });
 
@@ -35,6 +34,3 @@ public class Main {
         server.listen(9999);
     }
 }
-
-
-
